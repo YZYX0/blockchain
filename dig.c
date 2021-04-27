@@ -24,50 +24,50 @@ void Block_init(BLOCK *p)
 	p->nonce1 = 0;
 	p->nonce2 = 0;
 	for (i = 0; i < 32; i++)
-		p->coinbase[i] = rand() % 256;//0-255Ëæ»úÊı 
+		p->coinbase[i] = rand() % 256;//0-255éšæœºæ•° 
 	p->award = 100;
 
 }
 int Dig(SHA256_CTX *ctx, BLOCK *p, BYTE *hash, int n0)
-//Í¨¹ınonce1 nonce2²»¶Ï¼Ó1£¬ÕÒµ½nonce1 nonce2 Ê¹µÃblockµÄhashÂú×ã¿ªÍ·ÓĞn0¸ö16½øÖÆ0£¨²¢ÓÃtestº¯ÊıÑéÖ¤£©
+//é€šè¿‡nonce1 nonce2ä¸æ–­åŠ 1ï¼Œæ‰¾åˆ°nonce1 nonce2 ä½¿å¾—blockçš„hashæ»¡è¶³å¼€å¤´æœ‰n0ä¸ª16è¿›åˆ¶0ï¼ˆå¹¶ç”¨testå‡½æ•°éªŒè¯ï¼‰
 
 {
 	long long i, j;
 	int v;
 	int k;
-	BYTE str[blockBytes + 1];//ÒÔ¿Õ×Ö·û½áÎ² ËùÒÔ+1 
+	BYTE str[blockBytes + 1];//ä»¥ç©ºå­—ç¬¦ç»“å°¾ æ‰€ä»¥+1 
 	struct2str(p, str);
 	v = test(ctx, str, hash, n0);
 
 	for (i = 0; v == 0 && i < MaxNum; i++)
 	{
-		long2str(i, &str[40]);//Ö±½ÓĞŞ¸Ä×Ö·ûÊı×éÄÚµÄÖµ£¬±ÜÃâÖØĞÂstruct2str Ìá¸ßĞ§ÂÊ 
+		long2str(i, &str[40]);//ç›´æ¥ä¿®æ”¹å­—ç¬¦æ•°ç»„å†…çš„å€¼ï¼Œé¿å…é‡æ–°struct2str æé«˜æ•ˆç‡ 
 		for (j = 0; v == 0 && j < MaxNum; j++)
 		{
 			long2str(j, &str[48]);
 			v = test(ctx, str, hash, n0);
 		}
-		if (v)//Âú×ãÒªÇó
+		if (v)//æ»¡è¶³è¦æ±‚
 		{
 			p->nonce1 = i;
 			p->nonce2 = j;
 			
 			//for (k = 0; k < 96; k++)
 				//printf("%d ", str[k]);
-			//printf("\n");//ÑéÖ¤×Ö·û´®Êı×é
-			printf("nonce1:%lld nonce2:%lld\n", i, j);//×¢Òâlld²ÅÄÜÕıÈ·ÏÔÊ¾long long  
+			//printf("\n");//éªŒè¯å­—ç¬¦ä¸²æ•°ç»„
+			printf("nonce1ç­‰äº%lld nonce2ç­‰äº%lld\n", i, j);//æ³¨æ„lldæ‰èƒ½æ­£ç¡®æ˜¾ç¤ºlong long  
 			return 1;
 		}
 	}
 	return 0;
 }
 int test(SHA256_CTX *ctx, BYTE *str, BYTE *hash, int n)
-// ×Ö·û´®Êı×éstr Ê¹µÃhashÇ°n¸ö16½øÖÆÊıÎª0 Âú×ã·µ»Ø1 
+// å­—ç¬¦ä¸²æ•°ç»„str ä½¿å¾—hashå‰nä¸ª16è¿›åˆ¶æ•°ä¸º0 æ»¡è¶³è¿”å›1 
 {
 	int i;
 	sha256_update(ctx, str, strlen(str));
 	sha256_final(ctx, hash);
-	if (n % 2 == 0)//nÎªÅ¼Êı
+	if (n % 2 == 0)//nä¸ºå¶æ•°
 	{
 		
 		i = 0;
@@ -78,7 +78,7 @@ int test(SHA256_CTX *ctx, BYTE *str, BYTE *hash, int n)
 			}
 		return(1);
 	}
-	else//nÎªÆæÊı 
+	else//nä¸ºå¥‡æ•° 
 	{
 		
 		i = 0;
@@ -87,7 +87,7 @@ int test(SHA256_CTX *ctx, BYTE *str, BYTE *hash, int n)
 			{
 				return(0);
 			}
-		if (hash[i] <= 0x0f)//µÚn¸öÊ®Áù½øÖÆÎ»Îª0
+		if (hash[i] <= 0x0f)//ç¬¬nä¸ªåå…­è¿›åˆ¶ä½ä¸º0
 			return(1);
 		else
 			return(0);
