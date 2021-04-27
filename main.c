@@ -14,6 +14,7 @@ int main(void) {
 	Block_init(&block);
 	sha256_init(&ctx);
 	Dig(&ctx, &block, Hash, N0);
+	printf("哈希值为 ");
     while ( i < 32)
 		printf("%x ", Hash[i++]);
 	system("pause");
